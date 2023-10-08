@@ -9,16 +9,15 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   // Validate Schema
   const schema = joi.object({
-    username: joi.string().min(3).max(40).required(),
+    email: joi.string().min(6).max(40).required().email(),
     password: joi.string().min(6).max(1024).required(),
   });
 
   // check for Schema error
   const { error } = schema.validate(req.body);
-  if (error) res.status(400).send(error.details[0].message);
-
+  if (error) return res.status(400).send(error.details[0].message);
   // Check if user already exist
-  let user = await User.findOne({ username: req.body.username });
+  let user = await User.findOne({ email: req.body.email });
   if (user) return res.status(400).send("User Already Exist");
 
   // hash the password
@@ -26,7 +25,7 @@ router.post("/", async (req, res) => {
 
   // Create New User in database
   const newUser = new User({
-    username: req.body.username,
+    email: req.body.email,
     password: hashedPassword,
   });
   const token = await newUser.save();

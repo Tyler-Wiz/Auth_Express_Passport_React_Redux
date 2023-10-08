@@ -15,20 +15,26 @@ passport.deserializeUser(async (id, done) => {
 });
 
 passport.use(
-  new Strategy(async (username, password, done) => {
-    try {
-      if (!username || !password) done(new Error("Bad Request"), null);
-      const user = await User.findOne({ username });
-      if (!user) return done(null, false);
-      const isValid = await comparePasswords(password, user.password);
-      if (isValid) {
-        console.log("Auth Successful");
-        done(null, user);
-      } else {
-        done(null, null);
+  "Local-Strategy",
+  new Strategy(
+    {
+      usernameField: "email",
+    },
+    async (email, password, done) => {
+      try {
+        // if (!email || !password) done(new Error("Non"), null);
+        const user = await User.findOne({ email });
+        if (!user) return done(null, false);
+        const isValid = await comparePasswords(password, user.password);
+        if (isValid) {
+          console.log("Auth Successful");
+          done(null, user);
+        } else {
+          done(null, null);
+        }
+      } catch (error) {
+        done(error, null);
       }
-    } catch (error) {
-      done(error, null);
     }
-  })
+  )
 );

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-  username: "",
+  email: "",
   password: "",
   registerStatus: "",
   registerError: "",
@@ -16,7 +16,7 @@ export const registerUser = createAsyncThunk(
   async (user, { rejectWithValue }) => {
     try {
       const token = await axios.post("http://localhost:4001/register", {
-        username: user.username,
+        email: user.email,
         password: user.password,
       });
       return token.data;
@@ -31,7 +31,7 @@ export const loginUser = createAsyncThunk(
   async (user, { rejectWithValue }) => {
     try {
       const token = await axios.post("http://localhost:4001/login", {
-        username: user.username,
+        email: user.email,
         password: user.password,
       });
       return token.data;
@@ -54,7 +54,7 @@ const authSlice = createSlice({
         return {
           ...state,
           token: payload,
-          username: payload.username,
+          email: payload.email,
           password: payload.password,
           registerStatus: "user Created",
           registerError: "",
@@ -64,7 +64,7 @@ const authSlice = createSlice({
     builder.addCase(registerUser.rejected, (state, { payload }) => {
       return {
         ...state,
-        username: "",
+        email: "",
         password: "",
         token: "",
         registerError: payload,
@@ -79,7 +79,7 @@ const authSlice = createSlice({
         return {
           ...state,
           token: payload,
-          username: payload.username,
+          email: payload.email,
           password: payload.password,
           _id: payload._id,
           loginStatus: "success",
@@ -90,7 +90,7 @@ const authSlice = createSlice({
     builder.addCase(loginUser.rejected, (state, action) => {
       return {
         ...state,
-        username: "",
+        email: "",
         password: "",
         token: "",
         loginStatus: "rejected",
