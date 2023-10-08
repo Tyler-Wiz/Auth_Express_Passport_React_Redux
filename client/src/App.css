@@ -5,7 +5,12 @@
   flex-direction: column;
   align-items: center;
 }
-
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10rem;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

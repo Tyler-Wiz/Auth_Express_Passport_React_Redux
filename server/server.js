@@ -3,14 +3,28 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookie = require("cookie-parser");
 const session = require("express-session");
-const bcrypt = require("bcrypt");
 const passport = require("passport");
-const LocalPassport = require("passport").Strategy;
+const mongoose = require("mongoose");
 const register = require("./routes/register");
+const login = require("./routes/login");
+const MongoStore = require("connect-mongo");
+require("dotenv").config();
+require("./strategies/local");
+
 // ----------------------- END IMPORTS ---------------------
 
 // invoke express
 const app = express();
+
+// Connect to MongoDB
+const uri = process.env.MONGODB_URI;
+mongoose
+  .connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Mongo DB connect successful"))
+  .catch((error) => console.log("Mongo DB connect successful", error));
 
 // Middleware
 app.use(bodyParser.json());
@@ -23,13 +37,17 @@ app.use(
 );
 app.use(
   session({
-    secret: "secretcode",
+    secret: process.env.SECRET_CODE,
     resave: true,
     saveUninitialized: true,
-    cookie: { maxAge: 7869786187, secure: true, sameSite: false },
+    store: MongoStore.create({
+      mongoUrl: uri,
+    }),
   })
 );
-app.use(cookie("secretcode"));
+app.use(cookie(process.env.SECRET_CODE));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // PORT
 const PORT = process.env.PORT || 4001;
@@ -39,3 +57,4 @@ app.listen(PORT, () => {
 
 // ROUTES
 app.use("/register", register);
+app.use("/login", login);
