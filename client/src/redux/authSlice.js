@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { instance } from "../auth/Instance";
 
 const initialState = {
   email: "",
@@ -15,11 +16,13 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (user, { rejectWithValue }) => {
     try {
-      const token = await axios.post("http://localhost:4001/register", {
-        email: user.email,
-        password: user.password,
-      });
-      return token.data;
+      const token = await instance
+        .post("/register", {
+          email: user.email,
+          password: user.password,
+        })
+        .then((res) => res.data);
+      return token;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -30,7 +33,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (user, { rejectWithValue }) => {
     try {
-      const token = await axios.post("http://localhost:4001/login", {
+      const token = await axios.post("http://localhost:4000/login", {
         email: user.email,
         password: user.password,
       });

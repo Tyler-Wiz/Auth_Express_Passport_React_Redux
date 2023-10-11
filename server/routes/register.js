@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
   const hashedPassword = await passwordHash(req.body.password, 10);
 
   // Create New User in database
-  const newUser = new User({
+  const newUser = await User.create({
     email: req.body.email,
     password: hashedPassword,
   });

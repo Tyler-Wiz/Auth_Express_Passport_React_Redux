@@ -5,11 +5,17 @@ const cookie = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 const mongoose = require("mongoose");
-const register = require("./routes/register");
-const login = require("./routes/login");
+
 const MongoStore = require("connect-mongo");
 require("dotenv").config();
 require("./strategies/local");
+require("./strategies/github");
+
+// ------------------ ROUTE IMPORTS -----------------
+
+const register = require("./routes/register");
+const login = require("./routes/login");
+const github = require("./routes/github");
 
 // ----------------------- END IMPORTS ---------------------
 
@@ -40,6 +46,7 @@ app.use(
     secret: process.env.SECRET_CODE,
     resave: true,
     saveUninitialized: true,
+    cookie: { secure: false, sameSite: "lax", sameSite: "none" },
     store: MongoStore.create({
       mongoUrl: uri,
     }),
@@ -50,7 +57,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // PORT
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server is listening at port ${PORT}`);
 });
@@ -58,3 +65,4 @@ app.listen(PORT, () => {
 // ROUTES
 app.use("/register", register);
 app.use("/login", login);
+app.use("/auth", github);

@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 
-export const AuthForm = ({ dispatchFunction, buttonName }) => {
+export const AuthForm = ({
+  dispatchFunction,
+  buttonName,
+  passwordId,
+  emailId,
+}) => {
   //State
   const [formData, setFormData] = useState({
     email: "",
@@ -26,11 +31,11 @@ export const AuthForm = ({ dispatchFunction, buttonName }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="email">
+      <label htmlFor={emailId}>
         <div className="register">
           <p className="">Email</p>
           <input
-            id="username"
+            id={emailId}
             type="text"
             name="email"
             value={formData.email}
@@ -38,11 +43,11 @@ export const AuthForm = ({ dispatchFunction, buttonName }) => {
           />
         </div>
       </label>
-      <label htmlFor="password">
+      <label htmlFor={passwordId}>
         <div className="register">
           <p>password</p>
           <input
-            id="password"
+            id={passwordId}
             type="password"
             name="password"
             value={formData.password}

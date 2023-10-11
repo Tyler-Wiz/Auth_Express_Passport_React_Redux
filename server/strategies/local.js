@@ -2,6 +2,7 @@ const User = require("../models/user");
 const { Strategy } = require("passport-local");
 const { comparePasswords } = require("../utils/bcrypt");
 const passport = require("passport");
+require("dotenv").config();
 
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {

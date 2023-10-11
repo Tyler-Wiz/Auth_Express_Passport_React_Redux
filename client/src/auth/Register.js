@@ -11,7 +11,12 @@ export const Register = () => {
           Already have an account? <span>Log in</span>
         </h4>
       </div>
-      <AuthForm dispatchFunction={registerUser} buttonName="create account" />
+      <AuthForm
+        dispatchFunction={registerUser}
+        buttonName="create account"
+        passwordId="registerPassword"
+        emailId="registerEmail"
+      />
     </div>
   );
 };
